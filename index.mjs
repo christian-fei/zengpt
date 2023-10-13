@@ -1,5 +1,7 @@
 import http from 'node:http'
+import OpenAI from 'openai'
 
+const ai = new OpenAI()
 const messages = []
 
 const server = http.createServer((req, res) => {
@@ -18,20 +20,26 @@ const server = http.createServer((req, res) => {
       req.on('data', chunk => {
         body += chunk.toString()
       })
-      req.on('end', () => {
+      req.on('end', async () => {
         console.log(body)
-        const text = decodeURIComponent(body.split('=')[1])
+        const text = decodeURIComponent(body.split('=')[1]).trim()
         if (!text) return res.statusCode = 400
+        
+        const completion = await ai.chat.completions.create({
+          messages: messages.concat([{ role: 'user', content: text }]).map(m => ({role: m.role, content: m.content})),
+          model: 'gpt-3.5-turbo',
+        })
+        const llmMessage = completion.choices[0].message.content.trim()
         const newMessages = [
           {
-            text,
+            content: text,
             time: new Date().toISOString(),
-            type: 'user'
+            role: 'user'
           },
           {
-            text,
+            content: llmMessage,
             time: new Date().toISOString(),
-            type: 'llm'
+            role: 'assistant'
           }
         ]
         messages.push(...newMessages)
@@ -60,8 +68,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 function renderMessages(messages = []) {
   return messages.map(message => {
     return `
-    <div class="${message.type}-message">
-    ${message.text}
+    <div class="${message.role}-message">
+    ${message.content}
     </div>
     `
   }).join('')
@@ -101,7 +109,7 @@ function index (messages = []) {
           outline: none;
           margin: 0;
         }
-        .llm-message {
+        .assistant-message {
           display: block;
           width: 95%;
           font-size: 2rem;
