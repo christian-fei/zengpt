@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "markdown-it": "^13.0.2",
     "openai": "^4.12.1"
   }
 }

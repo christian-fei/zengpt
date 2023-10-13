@@ -1,6 +1,7 @@
 import http from 'node:http'
 import OpenAI from 'openai'
 import fs from 'fs'
+import markdownIt from 'markdown-it'
 
 if (process.env.OPENAI_API_KEY === undefined) {
   console.error('Please set OPENAI_API_KEY environment variable')
@@ -69,7 +70,8 @@ const server = http.createServer((req, res) => {
           messages: messages.concat([{ role: 'user', content: text }]).map(m => ({role: m.role, content: m.content})),
           model: 'gpt-3.5-turbo',
         })
-        const llmMessage = completion.choices[0].message.content.trim()
+        let llmMessage = completion.choices[0].message.content.trim()
+        llmMessage = markdownIt().render(llmMessage)
         const newMessages = [
           {
             content: text,
