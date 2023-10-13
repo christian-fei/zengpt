@@ -29,7 +29,10 @@ const server = http.createServer((req, res) => {
       req.on('end', async () => {
         console.log(body)
         const text = decodeURIComponent(body.split('=')[1]).trim()
-        if (!text) return res.statusCode = 400
+        if (!text) {
+          res.statusCode = 400
+          return res.end(renderMessages([]))
+        }
         
         const completion = await ai.chat.completions.create({
           messages: messages.concat([{ role: 'user', content: text }]).map(m => ({role: m.role, content: m.content})),
@@ -97,6 +100,29 @@ function index (messages = []) {
           height: 100%;
           margin: 0;
         }
+        header {
+          position:fixed;
+          top:1em;
+          left:1em;
+          right:1em;
+          padding:1em;
+          border-radius:2em;
+          border:1px solid lightgrey;
+          background:white;
+          color:black;
+        }
+        main {
+          height:99%;
+          width:70em;
+          max-width:100%;
+          margin:0 auto;
+        }
+        #messages {
+          flex:1;
+          overflow-y:scroll;
+          padding-top:8em
+        }
+
         .my-message {
           display: block;
           width: 100%;
@@ -155,13 +181,13 @@ function index (messages = []) {
         }
         </style>
       </head>
-      <body style="">
-        <header style="position:fixed;top:1em;left:1em;right:1em;padding:1em;border-radius:2em;border:1px solid lightgrey;background:white;color:black;">
-          <h1 style="">zengpt</h1>
+      <body x-data="{message:''}">
+        <header>
+          <h1>zengpt</h1>
         </header>
-        <main style="height:99%;width:70em;max-width:100%;margin:0 auto;">
-          <div style="height:99%;display:flex;flex-direction:column;" id="chat" x-data="{ text: '' }">
-            <div style="flex:1;overflow-y:scroll;padding-top:8em;" id="messages">${renderMessages(messages)}</div>
+        <main>
+          <div style="height:99%;display:flex;flex-direction:column;" id="chat">
+            <div id="messages">${renderMessages(messages)}</div>
             <input
               name="message"
               hx-post="/message"
@@ -169,6 +195,8 @@ function index (messages = []) {
               hx-target="#messages"
               hx-swap="beforeend scroll:bottom"
               hx-indicator="#loading-message"
+              x-model="message"
+              x-on:keyup.enter="setTimeout(() => message = '', 10)"
               class="my-message" autofocus type="text" placeholder="your message">
             <div style="position:fixed;bottom:3em;right:2em;" class="htmx-indicator" id="loading-message">
               <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="64" height="64" viewBox="0 0 24 24">
@@ -176,7 +204,7 @@ function index (messages = []) {
             </div>
           </div>
         </main>
-        <script type="module" src="client.mjs"></script>
+        <!--<script type="module" src="client.mjs"></script>-->
       </body>
     </html>
   `
