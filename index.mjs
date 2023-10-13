@@ -21,7 +21,11 @@ const server = http.createServer((req, res) => {
       res.setHeader('Content-Type', 'application/javascript')
       return res.end(client())
     }
-    if (req.url === '/message' && req.method === 'POST') {
+    if (req.url === '/chat' && req.method === 'DELETE') {
+      messages = initMessages()
+      return res.end(renderMessages(messages))
+    }
+    if (req.url === '/chat' && req.method === 'POST') {
       let body = ''
       req.on('data', chunk => {
         body += chunk.toString()
@@ -182,19 +186,21 @@ function index (messages = []) {
         </style>
       </head>
       <body x-data="{message:''}">
-        <header>
-          <h1>zengpt</h1>
+        <header style="display:flex">
+          <div style="flex:1";><h1>zengpt</h1></div>
+          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-target="#messages" hx-delete="/chat" x-on:click="$refs.message.focus()">new chat</button></div>
         </header>
         <main>
           <div style="height:99%;display:flex;flex-direction:column;" id="chat">
             <div id="messages">${renderMessages(messages)}</div>
             <input
               name="message"
-              hx-post="/message"
+              hx-post="/chat"
               hx-trigger="keyup[keyCode==13]"
               hx-target="#messages"
               hx-swap="beforeend scroll:bottom"
               hx-indicator="#loading-message"
+              x-ref="message"
               x-model="message"
               x-on:keyup.enter="setTimeout(() => message = '', 10)"
               class="my-message" autofocus type="text" placeholder="your message">
