@@ -2,6 +2,11 @@ import http from 'node:http'
 import OpenAI from 'openai'
 import fs from 'fs'
 
+if (process.env.OPENAI_API_KEY === undefined) {
+  console.error('Please set OPENAI_API_KEY environment variable')
+  process.exit(1)
+}
+
 const ai = new OpenAI()
 let messages = initMessages()
 
