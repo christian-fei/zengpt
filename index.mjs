@@ -28,28 +28,23 @@ const server = http.createServer((req, res) => {
       return res.end(client())
     }
     if (req.url === '/chats' && req.method === 'GET') {
-      // list json files in "chats" folder
       const files = fs.readdirSync('chats')
       res.statusCode = 200
       return res.end(files.map(file => `<a x-on:click="messageDisabled=true" hx-get="/chats/${file}" hx-target="#messages" href="/chats/${file}">${file.replace('.json','')}</a>`).join('<br>'))
     }
     if (req.url.startsWith('/chats') && req.method === 'GET') {
       const chatId = req.url.split('/')[2]
-      console.log('chatId', chatId)
-      // read file from "chats" folder
       const file = fs.readFileSync(`chats/${chatId}`)
       const messages = JSON.parse(file.toString())
       res.statusCode = 200
       return res.end(renderMessages(messages))
     }
     if (req.url === '/chats' && req.method === 'POST') {
-      // create directory "chats" if it doesn't exist
       if (!fs.existsSync('chats')) fs.mkdirSync('chats')
       if (messages.length === 1) {
         res.statusCode = 400
         return res.end(renderMessages(messages))
       }
-      // create a new file with the current timestamp
       const timestamp = new Date().toISOString().replace(/:/g, '-')
       fs.writeFileSync(`chats/${timestamp}.json`, JSON.stringify(messages, null, 2))
       messages = initMessages()
@@ -67,7 +62,6 @@ const server = http.createServer((req, res) => {
         body += chunk.toString()
       })
       req.on('end', async () => {
-        console.log(body)
         const text = decodeURIComponent(body.split('=')[1]).trim()
         if (!text) {
           res.statusCode = 400
