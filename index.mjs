@@ -23,10 +23,6 @@ const server = http.createServer((req, res) => {
       res.setHeader('Content-Type', 'text/css')
       return res.end(css())
     }
-    if (req.url === '/client.mjs') {
-      res.setHeader('Content-Type', 'application/javascript')
-      return res.end(client())
-    }
     if (req.url === '/chats' && req.method === 'GET') {
       const files = fs.readdirSync('chats')
       res.statusCode = 200
@@ -162,16 +158,11 @@ function index (messages = []) {
             </div>
           </div>
         </main>
-        <!--<script type="module" src="client.mjs"></script>-->
       </body>
     </html>
   `
 }
-function client () {
-  return `
-    //alert('Hello from client.mjs')
-  `
-}
+
 function css () {
   return `
 html, body {
