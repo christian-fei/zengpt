@@ -24,10 +24,6 @@ const server = http.createServer((req, res) => {
       res.setHeader('Content-Type', 'text/html')
       return res.end(index(messages))
     }
-    if (req.url === '/main.css') {
-      res.setHeader('Content-Type', 'text/css')
-      return res.end(css())
-    }
     if (req.url === '/chats' && req.method === 'GET') {
       const files = fs.readdirSync('chats')
       res.statusCode = 200
@@ -123,7 +119,6 @@ function renderMessages(messages = []) {
 }
 
 function index (messages = []) {
-  console.log('rendering index', messages.length)
   return `
     <!DOCTYPE html>
     <html>
