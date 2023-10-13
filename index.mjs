@@ -2,6 +2,7 @@ import http from 'node:http'
 import OpenAI from 'openai'
 import fs from 'fs'
 import markdownIt from 'markdown-it'
+import messageFromRequest from './lib/message-from-request.mjs'
 
 if (process.env.OPENAI_API_KEY === undefined) {
   console.error('Please set OPENAI_API_KEY environment variable')
@@ -55,12 +56,7 @@ const server = http.createServer((req, res) => {
       return res.end(renderMessages(messages))
     }
     if (req.url === '/chat' && req.method === 'POST') {
-      let body = ''
-      req.on('data', chunk => {
-        body += chunk.toString()
-      })
-      req.on('end', async () => {
-        const text = decodeURIComponent(body.split('=')[1]).trim()
+      messageFromRequest(req).then(async text => {
         if (!text) {
           res.statusCode = 400
           return res.end(renderMessages([]))
