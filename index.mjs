@@ -2,8 +2,14 @@ import http from 'node:http'
 import OpenAI from 'openai'
 
 const ai = new OpenAI()
-const messages = []
+let messages = initMessages()
 
+function initMessages () {
+  return [{
+    role: 'system',
+    content: 'Hi! I\'m Zengpt, a chatbot powered by GPT-3.5 Turbo. I\'m here to help you with any of your questions. What can I help you with?'
+  }]
+}
 const server = http.createServer((req, res) => {
   console.log(new Date().toISOString(), req.method, req.url)
   try {
@@ -68,7 +74,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 function renderMessages(messages = []) {
   return messages.map(message => {
     return `
-    <div class="${message.role}-message">
+    <div hx-transition class="${message.role}-message">
     ${message.content}
     </div>
     `
@@ -100,37 +106,73 @@ function index (messages = []) {
           outline: none;
           margin: 0;
         }
-        .user-message {
+        .user-message,
+        .assistant-message,
+        .system-message {
           display: block;
           width: 95%;
           font-size: 2rem;
           padding: 2.5rem 1rem;
-          border-left: 1px solid green;
           outline: none;
           margin: 0;
+          margin-bottom:2rem;
+
+          _font-family: monospace;
+          white-space: pre-wrap;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          hyphens: auto;
+        }
+        .user-message {
+          border-left: 5px solid green;
+        }
+        .user-message::before {
+          content: '👤';
+        }
+        .system-message {
+          border-left: 5px solid red;
+        }
+        .system-message::before {
+          content: '🤖';
         }
         .assistant-message {
-          display: block;
-          width: 95%;
-          font-size: 2rem;
-          padding: 2.5rem 1rem;
-          border-left: 1px solid #de3;
-          outline: none;
-          margin: 0;
+          border-left: 5px solid #de3;
+        }
+        .assistant-message::before {
+          content: '🤖';
+        }
+        #loading-message svg {
+          animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
         </style>
       </head>
       <body style="">
+        <header style="position:fixed;top:1em;left:1em;right:1em;padding:1em;border-radius:2em;border:1px solid lightgrey;background:white;color:black;">
+          <h1 style="">zengpt</h1>
+        </header>
         <main style="height:99%;width:70em;max-width:100%;margin:0 auto;">
           <div style="height:99%;display:flex;flex-direction:column;" id="chat" x-data="{ text: '' }">
-            <div style="flex:1;overflow-y:scroll;" id="messages">${renderMessages(messages)}</div>
+            <div style="flex:1;overflow-y:scroll;padding-top:8em;" id="messages">${renderMessages(messages)}</div>
             <input
               name="message"
               hx-post="/message"
               hx-trigger="keyup[keyCode==13]"
               hx-target="#messages"
               hx-swap="beforeend scroll:bottom"
+              hx-indicator="#loading-message"
               class="my-message" autofocus type="text" placeholder="your message">
+            <div style="position:fixed;bottom:3em;right:2em;" class="htmx-indicator" id="loading-message">
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="64" height="64" viewBox="0 0 24 24">
+                <path fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" d="M12 2 L12 6 M12 18 L12 22 M4.93 4.93 L7.76 7.76 M16.24 16.24 L19.07 19.07 M2 12 L6 12 M18 12 L22 12"></path>
+            </div>
           </div>
         </main>
         <script type="module" src="client.mjs"></script>
