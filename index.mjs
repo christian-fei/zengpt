@@ -2,6 +2,8 @@ import http from 'node:http'
 import OpenAI from 'openai'
 import fs from 'fs'
 import markdownIt from 'markdown-it'
+import mdHighlight from "markdown-it-highlightjs"
+
 import messageFromRequest from './lib/message-from-request.mjs'
 
 if (process.env.OPENAI_API_KEY === undefined) {
@@ -10,6 +12,7 @@ if (process.env.OPENAI_API_KEY === undefined) {
 }
 
 const ai = new OpenAI()
+const md = markdownIt().use(mdHighlight)
 let messages = initMessages()
 
 function initMessages () {
@@ -25,11 +28,6 @@ const server = http.createServer((req, res) => {
     if (req.url === '/') {
       res.setHeader('Content-Type', 'text/html')
       return res.end(index(messages))
-    }
-    if (req.url === '/chats' && req.method === 'GET') {
-      const files = fs.readdirSync('chats')
-      res.statusCode = 200
-      return res.end(files.map(file => `<a x-on:click="messageDisabled=true" hx-get="/chats/${file}" hx-target="#messages" href="/chats/${file}">${file.replace('.json','')}</a>`).join('<br>'))
     }
     if (req.url.startsWith('/chats') && req.method === 'GET') {
       const chatId = req.url.split('/')[2]
@@ -51,6 +49,9 @@ const server = http.createServer((req, res) => {
       res.statusCode = 200
       return res.end(renderMessages(messages))
     }
+    if (req.url === '/chat' && req.method === 'GET') {
+      return res.end(renderMessages(messages))
+    }
     if (req.url === '/chat' && req.method === 'DELETE') {
       messages = initMessages()
       return res.end(renderMessages(messages))
@@ -67,7 +68,7 @@ const server = http.createServer((req, res) => {
           model: 'gpt-3.5-turbo',
         })
         let llmMessage = completion.choices[0].message.content.trim()
-        llmMessage = markdownIt().render(llmMessage)
+        llmMessage = md.render(llmMessage)
         const newMessages = [
           {
             content: text,
@@ -117,6 +118,8 @@ function renderMessages(messages = []) {
 }
 
 function index (messages = []) {
+  const files = fs.readdirSync('chats')
+
   return `
     <!DOCTYPE html>
     <html>
@@ -125,17 +128,24 @@ function index (messages = []) {
         <title>zengpt</title>
         <script src="//unpkg.com/htmx.org@1.9.6"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
+        <link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet">
         <style>
         ${css()}
         </style>
       </head>
-      <body x-data="{message:'',messageDisabled:false}">
-        <header style="display:flex">
-          <div style="flex:1";><h1>zengpt</h1></div>
-          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-delete="/chat" hx-target="#messages" x-on:click="$refs.message.focus();messageDisabled=false">new chat</button></div>
-          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-post="/chats" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false">save chat</button></div>
-          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chats" hx-target="#chats">chats</button></div>
+      <body x-data="{message:'',messageDisabled:false,viewingPreviousChat:false,pristineChat:${messages.length === 1}}">
+        <header>
+          <div style="display:flex">
+            <div style="flex:1";><h1>zengpt</h1></div>
+            <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-delete="/chat" hx-target="#messages" x-on:click="$refs.message.focus();messageDisabled=false;pristineChat=true">new chat</button></div>
+            <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-post="/chats" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;pristineChat=true">save chat</button></div>
+            <div x-show="viewingPreviousChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chat" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;">go back</button></div>
+          </div>
           <div id="chats">
+            <details>
+              <summary>chats</summary>
+              ${files.map(file => `<a x-on:click="messageDisabled=true;pristineChat=true;viewingPreviousChat=true" hx-get="/chats/${file}" hx-target="#messages" href="/chats/${file}">${file.replace('.json','')}</a>`).join('<br>')}
+            </details>
           </div>
         </header>
         <main>
@@ -148,10 +158,12 @@ function index (messages = []) {
               hx-target="#messages"
               hx-swap="beforeend scroll:bottom"
               hx-indicator="#loading-message"
+              hx-on:htmx:before-request="this.disabled=true"
+              hx-on:htmx:after-request="this.disabled=false;setTimeout(() => this.focus(), 20)"
               x-bind:disabled="messageDisabled"
               x-ref="message"
               x-model="message"
-              x-on:keyup.enter="setTimeout(() => message = '', 10)"
+              x-on:keyup.enter="setTimeout(() => {message = '';pristineChat = false}, 10)"
               class="my-message" autofocus type="text" placeholder="your message">
             <div style="position:fixed;bottom:3em;right:2em;" class="htmx-indicator" id="loading-message">
               <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="64" height="64" viewBox="0 0 24 24">
@@ -173,6 +185,7 @@ html, body {
 }
 header {
   position:fixed;
+  z-index:100;
   top:1em;
   left:1em;
   right:1em;
@@ -202,6 +215,9 @@ main {
   border: 1px solid #ccc;
   outline: none;
   margin: 0;
+}
+pre {
+  background-color: black !important;
 }
 .user-message,
 .assistant-message,
