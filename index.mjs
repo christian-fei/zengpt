@@ -31,7 +31,7 @@ const server = http.createServer((req, res) => {
       // list json files in "chats" folder
       const files = fs.readdirSync('chats')
       res.statusCode = 200
-      return res.end(files.map(file => `<a hx-get="/chats/${file}" hx-target="#messages" href="/chats/${file}">${file.replace('.json','')}</a>`).join('<br>'))
+      return res.end(files.map(file => `<a x-on:click="messageDisabled=true" hx-get="/chats/${file}" hx-target="#messages" href="/chats/${file}">${file.replace('.json','')}</a>`).join('<br>'))
     }
     if (req.url.startsWith('/chats') && req.method === 'GET') {
       const chatId = req.url.split('/')[2]
@@ -138,11 +138,11 @@ function index (messages = []) {
         ${css()}
         </style>
       </head>
-      <body x-data="{message:''}">
+      <body x-data="{message:'',messageDisabled:false}">
         <header style="display:flex">
           <div style="flex:1";><h1>zengpt</h1></div>
-          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-target="#messages" hx-delete="/chat" x-on:click="$refs.message.focus()">new chat</button></div>
-          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-target="#messages" hx-post="/chats" x-on:click="$refs.message.value = ''">save chat</button></div>
+          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-delete="/chat" hx-target="#messages" x-on:click="$refs.message.focus();messageDisabled=false">new chat</button></div>
+          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-post="/chats" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false">save chat</button></div>
           <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chats" hx-target="#chats">chats</button></div>
           <div id="chats">
           </div>
@@ -157,6 +157,7 @@ function index (messages = []) {
               hx-target="#messages"
               hx-swap="beforeend scroll:bottom"
               hx-indicator="#loading-message"
+              x-bind:disabled="messageDisabled"
               x-ref="message"
               x-model="message"
               x-on:keyup.enter="setTimeout(() => message = '', 10)"
