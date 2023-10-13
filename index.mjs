@@ -109,6 +109,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   })
 }
 
+export default server
+export { messages }
+
 function renderMessages(messages = []) {
   return messages.map(message => {
     return `
