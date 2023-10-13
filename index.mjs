@@ -1,5 +1,6 @@
 import http from 'node:http'
 import OpenAI from 'openai'
+import fs from 'fs'
 
 const ai = new OpenAI()
 let messages = initMessages()
@@ -7,6 +8,7 @@ let messages = initMessages()
 function initMessages () {
   return [{
     role: 'system',
+    time: new Date().toISOString(),
     content: 'Hi! I\'m Zengpt, a chatbot powered by GPT-3.5 Turbo. I\'m here to help you with any of your questions. What can I help you with?'
   }]
 }
@@ -20,6 +22,17 @@ const server = http.createServer((req, res) => {
     if (req.url === '/client.mjs') {
       res.setHeader('Content-Type', 'application/javascript')
       return res.end(client())
+    }
+    if (req.url === '/chats' && req.method === 'POST') {
+      // create directory "chats" if it doesn't exist
+      if (!fs.existsSync('chats')) fs.mkdirSync('chats')
+      // create a new file with the current timestamp
+      const timestamp = new Date().toISOString().replace(/:/g, '-')
+      fs.writeFileSync(`chats/${timestamp}.json`, JSON.stringify(messages, null, 2))
+      messages = initMessages()
+
+      res.statusCode = 200
+      return res.end(renderMessages(messages))
     }
     if (req.url === '/chat' && req.method === 'DELETE') {
       messages = initMessages()
@@ -195,10 +208,11 @@ function index (messages = []) {
         <header style="display:flex">
           <div style="flex:1";><h1>zengpt</h1></div>
           <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-target="#messages" hx-delete="/chat" x-on:click="$refs.message.focus()">new chat</button></div>
+          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-target="#messages" hx-post="/chats" x-on:click="$refs.message.value = ''">save chat</button></div>
         </header>
         <main>
           <div style="height:99%;display:flex;flex-direction:column;" id="chat">
-            <div id="messages">${renderMessages(messages)}</div>
+            <div id="messages" hx-swap="scroll:bottom">${renderMessages(messages)}</div>
             <input
               name="message"
               hx-post="/chat"
