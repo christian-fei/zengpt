@@ -19,6 +19,10 @@ const server = http.createServer((req, res) => {
       res.setHeader('Content-Type', 'text/html')
       return res.end(index(messages))
     }
+    if (req.url === '/main.css') {
+      res.setHeader('Content-Type', 'text/css')
+      return res.end(css())
+    }
     if (req.url === '/client.mjs') {
       res.setHeader('Content-Type', 'application/javascript')
       return res.end(client())
@@ -131,96 +135,7 @@ function index (messages = []) {
         <script src="//unpkg.com/htmx.org@1.9.6"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
         <style>
-        html, body {
-          min-height: 100%;
-          height: 100%;
-          margin: 0;
-        }
-        header {
-          position:fixed;
-          top:1em;
-          left:1em;
-          right:1em;
-          padding:1em;
-          border-radius:2em;
-          border:1px solid lightgrey;
-          background:white;
-          color:black;
-        }
-        main {
-          height:99%;
-          width:70em;
-          max-width:100%;
-          margin:0 auto;
-        }
-        #messages {
-          flex:1;
-          overflow-y:scroll;
-          padding-top:8em
-        }
-
-        .my-message {
-          display: block;
-          width: 100%;
-          font-size: 2rem;
-          padding: 2.5rem 1rem;
-          border: 1px solid #ccc;
-          outline: none;
-          margin: 0;
-        }
-        .user-message,
-        .assistant-message,
-        .system-message {
-          display: block;
-          width: 95%;
-          font-size: 2rem;
-          padding: 2.5rem 1rem 2.5rem 2rem;
-          outline: none;
-          margin: 0;
-          transition: all 0.5s ease;
-          animation: fadein 0.5s ease;
-          
-          _font-family: monospace;
-          white-space: pre-wrap;
-          word-wrap: break-word;
-          overflow-wrap: break-word;
-          hyphens: auto;
-        }
-        @keyframes fadein {
-          from { opacity: 0; }
-          to   { opacity: 1; }
-        }
-        .user-message {
-          border-left: 5px solid green;
-          background: rgba(221, 238, 255, 0.6);
-        }
-        .user-message::before {
-          content: '👤';
-        }
-        .system-message {
-          border-left: 5px solid red;
-        }
-        .system-message::before {
-          content: '🤖';
-        }
-        .assistant-message {
-          border-left: 5px solid #de3;
-          background: rgba(221, 238, 255, 0.8);
-        }
-        .assistant-message::before {
-          content: '🤖';
-        }
-        #loading-message svg {
-          animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
+        ${css()}
         </style>
       </head>
       <body x-data="{message:''}">
@@ -261,4 +176,98 @@ function client () {
   return `
     //alert('Hello from client.mjs')
   `
+}
+function css () {
+  return `
+html, body {
+  min-height: 100%;
+  height: 100%;
+  margin: 0;
+}
+header {
+  position:fixed;
+  top:1em;
+  left:1em;
+  right:1em;
+  padding:1em;
+  border-radius:2em;
+  border:1px solid lightgrey;
+  background:white;
+  color:black;
+}
+main {
+  height:99%;
+  width:70em;
+  max-width:100%;
+  margin:0 auto;
+}
+#messages {
+  flex:1;
+  overflow-y:scroll;
+  padding-top:8em
+}
+
+.my-message {
+  display: block;
+  width: 100%;
+  font-size: 2rem;
+  padding: 2.5rem 1rem;
+  border: 1px solid #ccc;
+  outline: none;
+  margin: 0;
+}
+.user-message,
+.assistant-message,
+.system-message {
+  display: block;
+  width: 95%;
+  font-size: 2rem;
+  padding: 2.5rem 1rem 2.5rem 2rem;
+  outline: none;
+  margin: 0;
+  transition: all 0.5s ease;
+  animation: fadein 0.5s ease;
+  
+  _font-family: monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.user-message {
+  border-left: 5px solid green;
+  background: rgba(221, 238, 255, 0.6);
+}
+.user-message::before {
+  content: '👤';
+}
+.system-message {
+  border-left: 5px solid red;
+}
+.system-message::before {
+  content: '🤖';
+}
+.assistant-message {
+  border-left: 5px solid #de3;
+  background: rgba(221, 238, 255, 0.8);
+}
+.assistant-message::before {
+  content: '🤖';
+}
+#loading-message svg {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+`
 }
