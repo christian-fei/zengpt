@@ -23,9 +23,28 @@ const server = http.createServer((req, res) => {
       res.setHeader('Content-Type', 'application/javascript')
       return res.end(client())
     }
+    if (req.url === '/chats' && req.method === 'GET') {
+      // list json files in "chats" folder
+      const files = fs.readdirSync('chats')
+      res.statusCode = 200
+      return res.end(files.map(file => `<a hx-get="/chats/${file}" hx-target="#messages" href="/chats/${file}">${file.replace('.json','')}</a>`).join('<br>'))
+    }
+    if (req.url.startsWith('/chats') && req.method === 'GET') {
+      const chatId = req.url.split('/')[2]
+      console.log('chatId', chatId)
+      // read file from "chats" folder
+      const file = fs.readFileSync(`chats/${chatId}`)
+      const messages = JSON.parse(file.toString())
+      res.statusCode = 200
+      return res.end(renderMessages(messages))
+    }
     if (req.url === '/chats' && req.method === 'POST') {
       // create directory "chats" if it doesn't exist
       if (!fs.existsSync('chats')) fs.mkdirSync('chats')
+      if (messages.length === 1) {
+        res.statusCode = 400
+        return res.end(renderMessages(messages))
+      }
       // create a new file with the current timestamp
       const timestamp = new Date().toISOString().replace(/:/g, '-')
       fs.writeFileSync(`chats/${timestamp}.json`, JSON.stringify(messages, null, 2))
@@ -209,6 +228,9 @@ function index (messages = []) {
           <div style="flex:1";><h1>zengpt</h1></div>
           <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-target="#messages" hx-delete="/chat" x-on:click="$refs.message.focus()">new chat</button></div>
           <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-target="#messages" hx-post="/chats" x-on:click="$refs.message.value = ''">save chat</button></div>
+          <div style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chats" hx-target="#chats">chats</button></div>
+          <div id="chats">
+          </div>
         </header>
         <main>
           <div style="height:99%;display:flex;flex-direction:column;" id="chat">
