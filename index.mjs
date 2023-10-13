@@ -112,11 +112,10 @@ function index (messages = []) {
           display: block;
           width: 95%;
           font-size: 2rem;
-          padding: 2.5rem 1rem;
+          padding: 2.5rem 1rem 2.5rem 2rem;
           outline: none;
           margin: 0;
-          margin-bottom:2rem;
-
+          
           _font-family: monospace;
           white-space: pre-wrap;
           word-wrap: break-word;
@@ -125,6 +124,7 @@ function index (messages = []) {
         }
         .user-message {
           border-left: 5px solid green;
+          background: rgba(221, 238, 255, 0.6);
         }
         .user-message::before {
           content: '👤';
@@ -137,6 +137,7 @@ function index (messages = []) {
         }
         .assistant-message {
           border-left: 5px solid #de3;
+          background: rgba(221, 238, 255, 0.8);
         }
         .assistant-message::before {
           content: '🤖';
