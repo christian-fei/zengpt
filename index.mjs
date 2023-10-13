@@ -145,12 +145,18 @@ function index (messages = []) {
           padding: 2.5rem 1rem 2.5rem 2rem;
           outline: none;
           margin: 0;
+          transition: all 0.5s ease;
+          animation: fadein 0.5s ease;
           
           _font-family: monospace;
           white-space: pre-wrap;
           word-wrap: break-word;
           overflow-wrap: break-word;
           hyphens: auto;
+        }
+        @keyframes fadein {
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
         .user-message {
           border-left: 5px solid green;
