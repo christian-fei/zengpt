@@ -5,7 +5,7 @@ import mdHighlight from "markdown-it-highlightjs"
 import messageFromRequest from './lib/message-from-request.mjs'
 import initMessages from './lib/init-messages.mjs'
 import renderMessages from './views/messages.mjs'
-import { index } from './main-view.mjs'
+import main from './views/main.mjs'
 
 let messages = initMessages()
 const md = markdownIt().use(mdHighlight)
@@ -20,7 +20,7 @@ export default async function router (req, res) {
     if (req.url === '/') {
       const chats = fs.readdirSync('chats')
       res.setHeader('Content-Type', 'text/html')
-      return res.end(index(messages, chats))
+      return res.end(main(messages, chats))
     }
     if (req.url.startsWith('/chats') && req.method === 'GET') {
       const chatId = req.url.split('/')[2]

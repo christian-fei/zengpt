@@ -1,6 +1,6 @@
-import renderMessages from './views/messages.mjs';
+import renderMessages from './messages.mjs';
 
-export function index(messages = [], chats = []) {
+export default function main(messages = [], chats = []) {
   return `
     <!DOCTYPE html>
     <html>
