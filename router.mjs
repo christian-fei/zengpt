@@ -43,10 +43,12 @@ export default async function router (req, res) {
       return res.end(renderMessages(messages))
     }
     if (req.url === '/chat' && req.method === 'GET') {
+      res.statusCode = 200
       return res.end(renderMessages(messages))
     }
     if (req.url === '/chat' && req.method === 'DELETE') {
       messages = initMessages()
+      res.statusCode = 200
       return res.end(renderMessages(messages))
     }
     if (req.url === '/chat' && req.method === 'POST') {
@@ -79,6 +81,7 @@ export default async function router (req, res) {
       return res.end(renderMessages(newMessages))
     }
     console.log(' -> 404')
+    res.statusCode = 404
     return res.end()
   } catch (err) {
     console.error(err)
