@@ -59,7 +59,9 @@ export default async function router (req, res) {
       }
       
       const completion = await ai.chat.completions.create({
-        messages: messages.concat([{ role: 'user', content: text }]).map(m => ({role: m.role, content: m.content})),
+        messages: messages
+                    .concat([{ role: 'user', content: text }])
+                    .map(m => ({role: m.role, content: m.content})),
         model: 'gpt-3.5-turbo',
       })
       let llmText = completion.choices[0].message.content.trim()
