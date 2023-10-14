@@ -62,19 +62,11 @@ export default async function router (req, res) {
         messages: messages.concat([{ role: 'user', content: text }]).map(m => ({role: m.role, content: m.content})),
         model: 'gpt-3.5-turbo',
       })
-      let llmMessage = completion.choices[0].message.content.trim()
-      llmMessage = md.render(llmMessage)
+      let llmText = completion.choices[0].message.content.trim()
+      llmText = md.render(llmText)
       const newMessages = [
-        {
-          content: text,
-          time: new Date().toISOString(),
-          role: 'user'
-        },
-        {
-          content: llmMessage,
-          time: new Date().toISOString(),
-          role: 'assistant'
-        }
+        userMessage(text),
+        llmMessage(llmText)
       ]
       messages.push(...newMessages)
       res.statusCode = 200
@@ -90,6 +82,18 @@ export default async function router (req, res) {
   }
 }
 
+function userMessage(text) {
+  return {
+    content: text,
+    time: new Date().toISOString(),
+    role: 'user'
+  }
+}
 
-
-
+function llmMessage(text) {
+  return {
+    content: text,
+    time: new Date().toISOString(),
+    role: 'assistant'
+  }
+}
