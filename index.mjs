@@ -22,7 +22,7 @@ function initMessages () {
     content: 'Hi! I\'m Zengpt, a chatbot powered by GPT-3.5 Turbo. I\'m here to help you with any of your questions. What can I help you with?'
   }]
 }
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   console.log(new Date().toISOString(), req.method, req.url)
   try {
     if (req.url === '/') {
@@ -57,42 +57,40 @@ const server = http.createServer((req, res) => {
       return res.end(renderMessages(messages))
     }
     if (req.url === '/chat' && req.method === 'POST') {
-      messageFromRequest(req).then(async text => {
-        if (!text) {
-          res.statusCode = 400
-          return res.end(renderMessages([]))
-        }
-        
-        const completion = await ai.chat.completions.create({
-          messages: messages.concat([{ role: 'user', content: text }]).map(m => ({role: m.role, content: m.content})),
-          model: 'gpt-3.5-turbo',
-        })
-        let llmMessage = completion.choices[0].message.content.trim()
-        llmMessage = md.render(llmMessage)
-        const newMessages = [
-          {
-            content: text,
-            time: new Date().toISOString(),
-            role: 'user'
-          },
-          {
-            content: llmMessage,
-            time: new Date().toISOString(),
-            role: 'assistant'
-          }
-        ]
-        messages.push(...newMessages)
-        res.statusCode = 200
-        res.end(renderMessages(newMessages))
+      const text = await messageFromRequest(req)
+      if (!text) {
+        res.statusCode = 400
+        return res.end(renderMessages([]))
+      }
+      
+      const completion = await ai.chat.completions.create({
+        messages: messages.concat([{ role: 'user', content: text }]).map(m => ({role: m.role, content: m.content})),
+        model: 'gpt-3.5-turbo',
       })
-      return
+      let llmMessage = completion.choices[0].message.content.trim()
+      llmMessage = md.render(llmMessage)
+      const newMessages = [
+        {
+          content: text,
+          time: new Date().toISOString(),
+          role: 'user'
+        },
+        {
+          content: llmMessage,
+          time: new Date().toISOString(),
+          role: 'assistant'
+        }
+      ]
+      messages.push(...newMessages)
+      res.statusCode = 200
+      return res.end(renderMessages(newMessages))
     }
     console.log(' -> 404')
-    res.end()
+    return res.end()
   } catch (err) {
     console.error(err)
     res.statusCode = 500
-    res.end()
+    return res.end()
   }
 })
 
