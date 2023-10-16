@@ -17,9 +17,8 @@ export default async function router (req, res, messages) {
     if (req.url.startsWith('/chats') && req.method === 'GET') {
       const chatId = req.url.split('/')[2]
       const file = fs.readFileSync(`chats/${chatId}`)
-      const messages = JSON.parse(file.toString())
       res.statusCode = 200
-      return res.end(messagesView(messages))
+      return res.end(messagesView(JSON.parse(file.toString())))
     }
     if (req.url === '/chats' && req.method === 'POST') {
       if (!fs.existsSync('chats')) fs.mkdirSync('chats')
