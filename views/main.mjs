@@ -1,4 +1,5 @@
-import renderMessages from './messages.mjs';
+import renderMessages from './messages.mjs'
+import css from './css.mjs'
 
 export default function main(messages = [], chats = []) {
   return `
@@ -10,11 +11,14 @@ export default function main(messages = [], chats = []) {
         <script src="//unpkg.com/htmx.org@1.9.6"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
         <link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet">
-        <style>
-        ${css()}
-        </style>
+        <style>${css()}</style>
       </head>
-      <body x-data="{message:'',messageDisabled:false,viewingPreviousChat:false,pristineChat:${messages.length === 1}}">
+      <body x-data="{
+        message:'',
+        messageDisabled:false,
+        viewingPreviousChat:false,
+        pristineChat:${messages.length === 1}
+      }">
         <header>
           <div style="display:flex">
             <div style="flex:1";><h1>zengpt</h1></div>
@@ -25,13 +29,24 @@ export default function main(messages = [], chats = []) {
           <div id="chats">
             <details>
               <summary>chats</summary>
-              ${chats.map(chat => `<a x-on:click="messageDisabled=true;pristineChat=true;viewingPreviousChat=true" hx-get="/chats/${chat}" hx-target="#messages" href="/chats/${chat}">${chat.replace('.json', '')}</a>`).join('<br>')}
+              ${chats
+                .map(chat => `
+                <a 
+                  x-on:click="messageDisabled=true;pristineChat=true;viewingPreviousChat=true" 
+                  hx-get="/chats/${chat}" 
+                  hx-target="#messages" 
+                  href="/chats/${chat}">
+                    ${chat.replace('.json', '')}
+                </a>
+                `).join('<br>')}
             </details>
           </div>
         </header>
         <main>
           <div style="height:99%;display:flex;flex-direction:column;" id="chat">
-            <div id="messages" hx-swap="scroll:bottom">${renderMessages(messages)}</div>
+            <div id="messages" hx-swap="scroll:bottom">
+              ${renderMessages(messages)}
+            </div>
             <input
               name="message"
               hx-post="/chat"
@@ -55,102 +70,4 @@ export default function main(messages = [], chats = []) {
       </body>
     </html>
   `;
-}
-function css() {
-  return `
-html, body {
-  min-height: 100%;
-  height: 100%;
-  margin: 0;
-}
-header {
-  position:fixed;
-  z-index:100;
-  top:1em;
-  left:1em;
-  right:1em;
-  padding:1em;
-  border-radius:2em;
-  border:1px solid lightgrey;
-  background:white;
-  color:black;
-}
-main {
-  height:99%;
-  width:70em;
-  max-width:100%;
-  margin:0 auto;
-}
-#messages {
-  flex:1;
-  overflow-y:scroll;
-  padding-top:8em
-}
-
-.my-message {
-  display: block;
-  width: 100%;
-  font-size: 2rem;
-  padding: 2.5rem 1rem;
-  border: 1px solid #ccc;
-  outline: none;
-  margin: 0;
-}
-pre {
-  background-color: black !important;
-}
-.user-message,
-.assistant-message,
-.system-message {
-  display: block;
-  width: 95%;
-  font-size: 2rem;
-  padding: 2.5rem 1rem 2.5rem 2rem;
-  outline: none;
-  margin: 0;
-  transition: all 0.5s ease;
-  animation: fadein 0.5s ease;
-  
-  _font-family: monospace;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  hyphens: auto;
-}
-@keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-.user-message {
-  border-left: 5px solid green;
-  background: rgba(221, 238, 255, 0.6);
-}
-.user-message::before {
-  content: '👤';
-}
-.system-message {
-  border-left: 5px solid red;
-}
-.system-message::before {
-  content: '🤖';
-}
-.assistant-message {
-  border-left: 5px solid #de3;
-  background: rgba(221, 238, 255, 0.8);
-}
-.assistant-message::before {
-  content: '🤖';
-}
-#loading-message svg {
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-`;
 }
