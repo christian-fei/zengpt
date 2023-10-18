@@ -1,0 +1,15 @@
+---
+version: '3'
+services:
+  zengpt:
+    build: .
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: always
+    #environment:
+    #  OPENAI_API_KEY: '...'
+    # # or
+    # env_file:
+    #   - ./env_file.env # create 
+    volumes:
+      - /app/node_modules

@@ -1,3 +1,5 @@
+*.env
+!env_file.example.env
 .npmrc
 node_modules
 chats
