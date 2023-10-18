@@ -1,8 +1,7 @@
 export default function css() {
     return `
   html, body {
-    min-height: 100%;
-    height: 100%;
+    height: 95vh;
     margin: 0;
   }
   header {
@@ -18,7 +17,7 @@ export default function css() {
     color:black;
   }
   main {
-    height:99%;
+    height:95vh;
     width:70em;
     max-width:100%;
     margin:0 auto;
@@ -31,12 +30,12 @@ export default function css() {
   
   .my-message {
     display: block;
-    width: 100%;
+    width: 95vw;
     font-size: 2rem;
     padding: 2.5rem 1rem;
     border: 1px solid #ccc;
     outline: none;
-    margin: 0;
+    margin: 0 auto;
   }
   pre {
     background-color: black !important;
