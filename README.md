@@ -17,3 +17,5 @@ Provide the env var OPENAI_API_KEY either via `env_file` or by specifying it in 
 Update the `docker-compose.yml` file accordingly.
 
 Start zengpt on port 3000 with `docker-compose up -d`
+
+You can specify the port with the `HTTP_PORT` env var.
