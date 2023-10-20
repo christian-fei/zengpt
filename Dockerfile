@@ -12,4 +12,4 @@ COPY ./ /app
 
 EXPOSE 3000
 
-ENTRYPOINT ["/app/index.js"]
+ENTRYPOINT ["/app/index.mjs"]
