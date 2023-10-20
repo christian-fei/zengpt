@@ -29,8 +29,14 @@ export default function css() {
   }
   
   .my-message {
+    position: fixed;
+    bottom: 1em;
+    left: 1em;
+    right: 1em;
+    z-index: 100;
     display: block;
-    width: 95vw;
+    width: 90vw;
+
     font-size: 2rem;
     padding: 2.5rem 1rem;
     border: 1px solid #ccc;
@@ -38,7 +44,8 @@ export default function css() {
     margin: 0 auto;
   }
   pre {
-    background-color: black !important;
+    background-color: #aaa !important;
+    color: black !important;
   }
   .user-message,
   .assistant-message,
@@ -63,21 +70,21 @@ export default function css() {
     to   { opacity: 1; }
   }
   .user-message {
-    border-left: 5px solid green;
-    background: rgba(221, 238, 255, 0.6);
+    _border-left: 5px solid green;
+    _background: rgba(221, 238, 255, 0.6);
   }
   .user-message::before {
     content: '👤';
   }
   .system-message {
-    border-left: 5px solid red;
+    _border-left: 5px solid red;
   }
   .system-message::before {
     content: '🤖';
   }
   .assistant-message {
-    border-left: 5px solid #de3;
-    background: rgba(221, 238, 255, 0.8);
+    _border-left: 5px solid #de3;
+    _background: rgba(221, 238, 255, 0.8);
   }
   .assistant-message::before {
     content: '🤖';
