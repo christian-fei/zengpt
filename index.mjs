@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import http from 'node:http'
 import router from './router.mjs'
 import initMessages from './lib/init-messages.mjs'
