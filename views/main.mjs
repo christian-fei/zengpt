@@ -43,7 +43,7 @@ export default function main(messages = [], chats = []) {
           </div>
         </header>
         <main>
-          <div style="height:95vh;display:flex;flex-direction:column;" id="chat">
+          <div style="" id="chat">
             <div id="messages" hx-swap="scroll:bottom">
               ${renderMessages(messages)}
             </div>
