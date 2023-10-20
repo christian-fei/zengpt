@@ -1,11 +1,13 @@
 import fs from 'fs'
 
 export function listing () {
+  if (!fs.existsSync('chats')) fs.mkdirSync('chats')
   return fs.readdirSync('chats')
 }
 
 export function byChatId (chatId) {
   const file = fs.readFileSync(`chats/${chatId}`)
+  if (!file) return []
   return JSON.parse(file.toString())
 }
 
