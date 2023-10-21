@@ -51,7 +51,8 @@ export default async function router (req, res, messages) {
         res.statusCode = 400
         return res.end(messagesView([]))
       }
-
+      console.log('user:', text)
+      
       llmChat(messages, text, (data) => {
         connections.forEach(r => {
           if (r._visitor === visitorFromRequest(req)) {
@@ -62,6 +63,8 @@ export default async function router (req, res, messages) {
             r.write('\n\n')
           }
         })
+      }, (text) => {
+        console.log('llm:', text)
       })
       res.statusCode = 200
       if (messages.length <= 1) {
