@@ -25,9 +25,12 @@ export default function main(messages = [], chats = []) {
           <div style="display:flex">
             <div style="flex:1";><h1>zengpt</h1></div>
             <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-delete="/chat" hx-target="#messages" x-on:click="$refs.message.focus();messageDisabled=false;pristineChat=true;$refs.llmMessage.textContent=''">new chat</button></div>
+            <!--
             <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-post="/chats" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;pristineChat=true">save chat</button></div>
             <div x-show="viewingPreviousChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chat" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;">go back</button></div>
+            -->
           </div>
+          <!--
           <div id="chats">
             <details>
               <summary>chats</summary>
@@ -43,6 +46,7 @@ export default function main(messages = [], chats = []) {
                 `).join('<br>')}
             </details>
           </div>
+          -->
         </header>
         <main>
           <div id="chat" style="display:flex;flex-direction:column;height:95vh">
@@ -79,7 +83,8 @@ export default function main(messages = [], chats = []) {
         </main>
         <script>
         document.addEventListener('htmx:sseMessage', debounce(function(event) {
-          window.llmMessage.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'})
+          // window.llmMessage.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'})
+          window.messages.scrollTop = window.messages.scrollHeight
         }, 50, true))
         function debounce(func, wait = 50, immediate) {
           var timeout;
