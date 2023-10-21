@@ -19,7 +19,7 @@ export default function css() {
   }
   main {
     height:95vh;
-    _width:70em;
+    _width:80em;
     max-width:100%;
     margin:0 auto;
   }
@@ -28,7 +28,7 @@ export default function css() {
     overflow-y:scroll;
     padding-top:8em;
     padding-bottom:8em;
-    max-width:70em;
+    max-width:80em;
     margin: 0 auto;
     padding-right:0.5em;
     padding-left:0.5em;
@@ -53,7 +53,7 @@ export default function css() {
   .system-message {
     display: block;
     width: 100%;
-    max-width: 70em;
+    max-width: 80em;
     font-size: 2rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
     outline: none;
