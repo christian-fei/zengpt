@@ -24,7 +24,13 @@ export default function main(messages = [], chats = []) {
         <header>
           <div style="display:flex">
             <div style="flex:1";><h1>zengpt</h1></div>
-            <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-delete="/chat" hx-target="#messages" x-on:click="$refs.message.focus();messageDisabled=false;pristineChat=true;$refs.llmMessage.textContent=''">new chat</button></div>
+            <div
+              x-show="!pristineChat"
+              style="flex:1;";><button
+              style="display:block;padding:1rem;font-size:1.5rem;"
+              hx-delete="/chat"
+              hx-target="#messages aside"
+              x-on:click="$refs.message.focus();messageDisabled=false;pristineChat=true;$refs.llmMessage && $refs.llmMessage.innerText=''">new chat</button></div>
             <!--
             <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-post="/chats" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;pristineChat=true">save chat</button></div>
             <div x-show="viewingPreviousChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chat" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;">go back</button></div>
@@ -51,7 +57,9 @@ export default function main(messages = [], chats = []) {
         <main>
           <div id="chat" style="display:flex;flex-direction:column;height:95vh">
             <div x-ref="messages" id="messages" style="flex:1" hx-swap="scroll:bottom">
+              <aside>
               ${renderMessages(messages)}
+              </aside>
               <div
                 style="min-height:10em;"
                 x-ref="llmMessage"
@@ -61,12 +69,11 @@ export default function main(messages = [], chats = []) {
                 sse-swap="message"></div>
             </div>
             <input
-              style="_flex:1"
               name="message"
               hx-post="/chat"
               hx-trigger="keyup[keyCode==13]"
-              hx-target="#llmMessage"
-              hx-swap="beforebegin scroll:bottom"
+              hx-target="#messages aside"
+              hx-swap="beforeend scroll:bottom"
               hx-indicator="#loading-message"
               hx-on:htmx:before-request="this.disabled=true"
               hx-on:htmx:after-request="this.disabled=false;setTimeout(() => this.focus(), 50)"
