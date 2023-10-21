@@ -4,6 +4,7 @@ import messagesView from './views/messages.mjs'
 import mainView from './views/main.mjs'
 import llmChat from './lib/llm-chat.mjs'
 import {byChatId, listing, saveChat} from './chats.mjs'
+import visitorFromRequest from './lib/visitor-from-request.mjs'
 
 let connections = []
 
@@ -52,8 +53,10 @@ export default async function router (req, res, messages) {
       }
 
       llmChat(messages, text, (data) => {
-        connections.forEach(res => {
-          res.write('data: ' + data.replace(/\n/gi,'') + '\n\n');
+        connections.forEach(r => {
+          if (r._visitor === visitorFromRequest(req)) {
+            r.write('data: ' + data.replace(/\n/gi,'') + '\n\n');
+          }
         })
       })
       res.statusCode = 200
@@ -72,7 +75,7 @@ export default async function router (req, res, messages) {
     }
 
     if (req.headers.accept && req.headers.accept.includes('text/event-stream')) {
-      return handleSSE(res, connections)
+      return handleSSE(req, res, connections)
     }
 
     console.log(' -> 404')
@@ -85,7 +88,8 @@ export default async function router (req, res, messages) {
   }
 }
 
-function handleSSE (res, connections = []) {
+function handleSSE (req, res, connections = []) {
+  res._visitor = visitorFromRequest(req)
   connections.push(res)
   res.on('close', () => {
     connections.splice(connections.findIndex(c => res === c), 1)
@@ -96,3 +100,4 @@ function handleSSE (res, connections = []) {
     Connection: 'keep-alive'
   })
 }
+
