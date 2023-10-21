@@ -4,7 +4,6 @@ import messagesView from './views/messages.mjs'
 import mainView from './views/main.mjs'
 import llmChat from './lib/llm-chat.mjs'
 import {byChatId, listing, saveChat} from './chats.mjs'
-import visitorFromRequest from './lib/visitor-from-request.mjs'
 
 let connections = []
 
@@ -55,13 +54,11 @@ export default async function router (req, res, messages) {
       
       llmChat(messages, text, (data) => {
         connections.forEach(r => {
-          if (r._visitor === visitorFromRequest(req)) {
-            r.write('id: ' + new Date().toISOString() + '\n')
-            data.split('\n').forEach(d => {
-              r.write('data: ' + d + '\n');
-            })
-            r.write('\n\n')
-          }
+          r.write('id: ' + new Date().toISOString() + '\n')
+          data.split('\n').forEach(d => {
+            r.write('data: ' + d + '\n');
+          })
+          r.write('\n\n')
         })
       }, (text) => {
         console.log('llm:', text)
@@ -96,7 +93,6 @@ export default async function router (req, res, messages) {
 }
 
 function handleSSE (req, res, connections = []) {
-  res._visitor = visitorFromRequest(req)
   connections.push(res)
   res.on('close', () => {
     connections.splice(connections.findIndex(c => res === c), 1)
