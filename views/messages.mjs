@@ -10,7 +10,6 @@ const md = markdownIt().set({
 
 export default function renderMessages(messages = []) {
   return messages.map(message => {
-    //console.log(md.render(message.content))
     return `
     <div hx-transition class="${message.role}-message">
     ${md.render(message.content)}

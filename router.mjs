@@ -57,7 +57,6 @@ export default async function router (req, res, messages) {
           if (r._visitor === visitorFromRequest(req)) {
             r.write('id: ' + new Date().toISOString() + '\n')
             data.split('\n').forEach(d => {
-              console.log(d)
               r.write('data: ' + d + '\n');
             })
             r.write('\n\n')
