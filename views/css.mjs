@@ -26,19 +26,14 @@ export default function css() {
     flex:1;
     overflow-y:scroll;
     padding-top:8em;
+    padding-bottom:8em;
     max-width:70em;
   }  
   .my-message {
-    _position: fixed;
-    bottom: 1em;
-    left: 1em;
-    right: 1em;
-    z-index: 100;
     display: block;
     width: 100%;
-
     font-size: 2rem;
-    padding: 2.5rem 1rem;
+    padding: 1rem 1rem;
     border: 1px solid #ccc;
     outline: none;
     margin: 0 auto;
@@ -53,7 +48,7 @@ export default function css() {
     display: block;
     max-width: 95%;
     font-size: 2rem;
-    padding: 1rem 1rem 1rem 1rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
     outline: none;
     margin: 0;
     transition: all 0.5s ease;

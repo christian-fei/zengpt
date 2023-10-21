@@ -45,10 +45,11 @@ export default function main(messages = [], chats = []) {
           </div>
         </header>
         <main>
-          <div id="chat" style="display:flex;flex-direction:column">
-            <div x-ref="messages" id="messages" style="flex:1">
+          <div id="chat" style="display:flex;flex-direction:column;height:95vh">
+            <div x-ref="messages" id="messages" style="flex:1" hx-swap="scroll:bottom">
               ${renderMessages(messages)}
               <div
+                style="min-height:10em;"
                 x-ref="llmMessage"
                 id="llmMessage"
                 hx-ext="sse"
@@ -56,7 +57,7 @@ export default function main(messages = [], chats = []) {
                 sse-swap="message"></div>
             </div>
             <input
-              style="flex:1"
+              style="_flex:1"
               name="message"
               hx-post="/chat"
               hx-trigger="keyup[keyCode==13]"
