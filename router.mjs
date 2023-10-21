@@ -60,7 +60,7 @@ export default async function router (req, res, messages) {
         })
       })
       res.statusCode = 200
-      if (messages.length === 1) {
+      if (messages.length <= 1) {
         return res.end(messagesView([{
           content: text,
           time: new Date().toISOString(),
