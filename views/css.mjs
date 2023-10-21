@@ -18,7 +18,7 @@ export default function css() {
   }
   main {
     height:95vh;
-    width:70em;
+    _width:100em;
     max-width:100%;
     margin:0 auto;
   }
@@ -27,13 +27,18 @@ export default function css() {
     overflow-y:scroll;
     padding-top:8em;
     padding-bottom:8em;
-    max-width:70em;
+    max-width:100em;
+    margin: 0 auto;
+    padding-right:0.5em;
+    padding-left:0.5em;
+    overflow-x: hidden !important;
   }  
   .my-message {
     display: block;
+    max-width: 50em;
     width: 100%;
     font-size: 2rem;
-    padding: 1rem 1rem;
+    padding: 2rem 1rem;
     border: 1px solid #ccc;
     outline: none;
     margin: 0 auto;
@@ -46,11 +51,12 @@ export default function css() {
   .assistant-message,
   .system-message {
     display: block;
-    max-width: 95%;
+    width: 100%;
+    max-width: 100em;
     font-size: 2rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
     outline: none;
-    margin: 0;
+    margin: 0 auto;
     transition: all 0.5s ease;
     animation: fadein 0.5s ease;
     
