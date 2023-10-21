@@ -3,6 +3,7 @@ export default function css() {
   html, body {
     height: 95vh;
     margin: 0;
+    font-family: monospace;
   }
   header {
     position:fixed;
@@ -18,7 +19,7 @@ export default function css() {
   }
   main {
     height:95vh;
-    _width:100em;
+    _width:70em;
     max-width:100%;
     margin:0 auto;
   }
@@ -27,7 +28,7 @@ export default function css() {
     overflow-y:scroll;
     padding-top:8em;
     padding-bottom:8em;
-    max-width:100em;
+    max-width:70em;
     margin: 0 auto;
     padding-right:0.5em;
     padding-left:0.5em;
@@ -52,7 +53,7 @@ export default function css() {
   .system-message {
     display: block;
     width: 100%;
-    max-width: 100em;
+    max-width: 70em;
     font-size: 2rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
     outline: none;
@@ -60,10 +61,11 @@ export default function css() {
     transition: all 0.5s ease;
     animation: fadein 0.5s ease;
     
-    _font-family: monospace;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    font-family: monospace;
+    _white-space: pre-wrap;
+    _word-wrap: break-word;
+    _overflow-wrap: break-word;
+    _word-break: break-all;
     hyphens: auto;
   }
   @keyframes fadein {
