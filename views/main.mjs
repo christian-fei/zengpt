@@ -16,6 +16,7 @@ export default function main(messages = [], chats = []) {
       </head>
       <body x-data="{
         message:'',
+        llmMessage:'',
         messageDisabled:false,
         viewingPreviousChat:false,
         pristineChat:${messages.length === 1}
@@ -23,7 +24,7 @@ export default function main(messages = [], chats = []) {
         <header>
           <div style="display:flex">
             <div style="flex:1";><h1>zengpt</h1></div>
-            <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-delete="/chat" hx-target="#messages" x-on:click="$refs.message.focus();messageDisabled=false;pristineChat=true">new chat</button></div>
+            <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-delete="/chat" hx-target="#messages" x-on:click="$refs.message.focus();messageDisabled=false;pristineChat=true;$refs.llmMessage.textContent=''">new chat</button></div>
             <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-post="/chats" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;pristineChat=true">save chat</button></div>
             <div x-show="viewingPreviousChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chat" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;">go back</button></div>
           </div>
@@ -48,7 +49,7 @@ export default function main(messages = [], chats = []) {
             <div id="messages" hx-swap="scroll:bottom">
               ${renderMessages(messages)}
             </div>
-            <div hx-ext="sse"  sse-connect="/ssechat" sse-swap="message"></div>
+            <div x-ref="llmMessage" hx-ext="sse"  sse-connect="/ssechat" sse-swap="message"></div>
             <input
               name="message"
               hx-post="/chat"
