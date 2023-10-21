@@ -55,7 +55,12 @@ export default async function router (req, res, messages) {
       llmChat(messages, text, (data) => {
         connections.forEach(r => {
           if (r._visitor === visitorFromRequest(req)) {
-            r.write('data: ' + data.replace(/\n/gi,'') + '\n\n');
+            r.write('id: ' + new Date().toISOString() + '\n')
+            data.split('\n').forEach(d => {
+              console.log(d)
+              r.write('data: ' + d + '\n');
+            })
+            r.write('\n\n')
           }
         })
       })

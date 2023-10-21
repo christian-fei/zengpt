@@ -11,7 +11,7 @@ export default function main(messages = [], chats = []) {
         <script src="//unpkg.com/htmx.org"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
         <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
-        <link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet">
+        <!--<link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet">-->
         <style>${css()}</style>
       </head>
       <body x-data="{
@@ -49,7 +49,7 @@ export default function main(messages = [], chats = []) {
             <div id="messages" hx-swap="scroll:bottom">
               ${renderMessages(messages)}
             </div>
-            <div x-ref="llmMessage" hx-ext="sse"  sse-connect="/ssechat" sse-swap="message"></div>
+            <div x-ref="llmMessage" hx-ext="sse" sse-connect="/ssechat" sse-swap="message"></div>
             <input
               name="message"
               hx-post="/chat"

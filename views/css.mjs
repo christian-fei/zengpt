@@ -25,7 +25,8 @@ export default function css() {
   #messages {
     flex:1;
     overflow-y:scroll;
-    padding-top:8em
+    padding-top:8em;
+    max-width:70em;
   }
   
   .my-message {
@@ -51,7 +52,7 @@ export default function css() {
   .assistant-message,
   .system-message {
     display: block;
-    width: 95%;
+    max-width: 95%;
     font-size: 2rem;
     padding: 2.5rem 1rem 2.5rem 2rem;
     outline: none;
@@ -66,7 +67,7 @@ export default function css() {
     hyphens: auto;
   }
   @keyframes fadein {
-    from { opacity: 0; }
+    from { opacity: 0.6; }
     to   { opacity: 1; }
   }
   .user-message {
