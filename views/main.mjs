@@ -8,8 +8,9 @@ export default function main(messages = [], chats = []) {
       <head>
         <meta charset="utf-8">
         <title>zengpt</title>
-        <script src="//unpkg.com/htmx.org@1.9.6"></script>
+        <script src="//unpkg.com/htmx.org"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
+        <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
         <link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet">
         <style>${css()}</style>
       </head>
@@ -43,10 +44,11 @@ export default function main(messages = [], chats = []) {
           </div>
         </header>
         <main>
-          <div style="" id="chat">
+          <div style="padding-bottom:10em" id="chat">
             <div id="messages" hx-swap="scroll:bottom">
               ${renderMessages(messages)}
             </div>
+            <div hx-ext="sse"  sse-connect="/ssechat" sse-swap="message"></div>
             <input
               name="message"
               hx-post="/chat"
