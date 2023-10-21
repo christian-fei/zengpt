@@ -27,16 +27,15 @@ export default function css() {
     overflow-y:scroll;
     padding-top:8em;
     max-width:70em;
-  }
-  
+  }  
   .my-message {
-    position: fixed;
+    _position: fixed;
     bottom: 1em;
     left: 1em;
     right: 1em;
     z-index: 100;
     display: block;
-    width: 90vw;
+    width: 100%;
 
     font-size: 2rem;
     padding: 2.5rem 1rem;
@@ -54,7 +53,7 @@ export default function css() {
     display: block;
     max-width: 95%;
     font-size: 2rem;
-    padding: 2.5rem 1rem 2.5rem 2rem;
+    padding: 1rem 1rem 1rem 1rem;
     outline: none;
     margin: 0;
     transition: all 0.5s ease;
@@ -71,24 +70,23 @@ export default function css() {
     to   { opacity: 1; }
   }
   .user-message {
-    _border-left: 5px solid green;
-    _background: rgba(221, 238, 255, 0.6);
+    background: rgba(221, 238, 255, 0.7);
   }
   .user-message::before {
-    content: '👤';
+    _content: '👤';
   }
   .system-message {
     _border-left: 5px solid red;
   }
   .system-message::before {
-    content: '🤖';
+    _content: '🤖';
   }
   .assistant-message {
     _border-left: 5px solid #de3;
-    _background: rgba(221, 238, 255, 0.8);
+    _background: rgba(221, 238, 255, 0.6);
   }
   .assistant-message::before {
-    content: '🤖';
+    _content: '🤖';
   }
   #loading-message svg {
     animation: spin 1s linear infinite;

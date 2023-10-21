@@ -45,20 +45,26 @@ export default function main(messages = [], chats = []) {
           </div>
         </header>
         <main>
-          <div style="padding-bottom:10em" id="chat">
-            <div id="messages" hx-swap="scroll:bottom">
+          <div id="chat" style="display:flex;flex-direction:column">
+            <div x-ref="messages" id="messages" style="flex:1">
               ${renderMessages(messages)}
+              <div
+                x-ref="llmMessage"
+                id="llmMessage"
+                hx-ext="sse"
+                sse-connect="/ssechat"
+                sse-swap="message"></div>
             </div>
-            <div x-ref="llmMessage" hx-ext="sse" sse-connect="/ssechat" sse-swap="message"></div>
             <input
+              style="flex:1"
               name="message"
               hx-post="/chat"
               hx-trigger="keyup[keyCode==13]"
-              hx-target="#messages"
-              hx-swap="beforeend scroll:bottom"
+              hx-target="#llmMessage"
+              hx-swap="beforebegin scroll:bottom"
               hx-indicator="#loading-message"
               hx-on:htmx:before-request="this.disabled=true"
-              hx-on:htmx:after-request="this.disabled=false;setTimeout(() => this.focus(), 20)"
+              hx-on:htmx:after-request="this.disabled=false;setTimeout(() => this.focus(), 50)"
               x-bind:disabled="messageDisabled"
               x-ref="message"
               x-model="message"
@@ -70,6 +76,26 @@ export default function main(messages = [], chats = []) {
             </div>
           </div>
         </main>
+        <script>
+        document.addEventListener('htmx:sseMessage', debounce(function(event) {
+          window.llmMessage.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'})
+        }, 50, true))
+        function debounce(func, wait = 50, immediate) {
+          var timeout;
+          return function() {
+            var context = this, args = arguments;
+            var later = function() {
+              timeout = null;
+              if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+          };
+        }
+        
+        </script>
       </body>
     </html>
   `;
