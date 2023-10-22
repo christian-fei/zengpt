@@ -8,13 +8,15 @@ export default function main(messages = [], chats = []) {
       <head>
         <meta charset="utf-8">
         <title>zengpt</title>
-        <script src="//unpkg.com/htmx.org@1.9.6"></script>
+        <script src="//unpkg.com/htmx.org"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
-        <link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet">
+        <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
+        <!--<link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet">-->
         <style>${css()}</style>
       </head>
       <body x-data="{
         message:'',
+        llmMessage:'',
         messageDisabled:false,
         viewingPreviousChat:false,
         pristineChat:${messages.length === 1}
@@ -22,17 +24,28 @@ export default function main(messages = [], chats = []) {
         <header>
           <div style="display:flex">
             <div style="flex:1";><h1>zengpt</h1></div>
-            <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-delete="/chat" hx-target="#messages" x-on:click="$refs.message.focus();messageDisabled=false;pristineChat=true">new chat</button></div>
-            <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-post="/chats" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;pristineChat=true">save chat</button></div>
-            <div x-show="viewingPreviousChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chat" hx-target="#messages" x-on:click="$refs.message.value = '';messageDisabled=false;">go back</button></div>
+            <div x-show="!pristineChat" style="flex:1;";>
+              <button
+                style="display:block;padding:1rem;font-size:1.5rem;"
+                hx-delete="/chat"
+                hx-target="#messages aside"
+                @click="$refs.message.focus();messageDisabled=false;pristineChat=true;">
+                clear
+              </button>
+            </div>
+            <!--
+            <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-post="/chats" hx-target="#messages" @click="$refs.message.value = '';messageDisabled=false;pristineChat=true">save chat</button></div>
+            <div x-show="viewingPreviousChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chat" hx-target="#messages" @click="$refs.message.value = '';messageDisabled=false;">go back</button></div>
+            -->
           </div>
+          <!--
           <div id="chats">
             <details>
               <summary>chats</summary>
               ${chats
                 .map(chat => `
                 <a 
-                  x-on:click="messageDisabled=true;pristineChat=true;viewingPreviousChat=true" 
+                  @click="messageDisabled=true;pristineChat=true;viewingPreviousChat=true" 
                   hx-get="/chats/${chat}" 
                   hx-target="#messages" 
                   href="/chats/${chat}">
@@ -41,25 +54,35 @@ export default function main(messages = [], chats = []) {
                 `).join('<br>')}
             </details>
           </div>
+          -->
         </header>
         <main>
-          <div style="" id="chat">
-            <div id="messages" hx-swap="scroll:bottom">
+          <div id="chat" style="display:flex;flex-direction:column;height:95vh">
+            <div x-ref="messages" id="messages" style="flex:1" hx-swap="scroll:bottom">
+              <aside>
               ${renderMessages(messages)}
+              </aside>
+              <div
+                style="min-height:10em;"
+                x-ref="llmMessage"
+                id="llmMessage"
+                hx-ext="sse"
+                sse-connect="/ssechat"
+                sse-swap="message"></div>
             </div>
             <input
               name="message"
               hx-post="/chat"
               hx-trigger="keyup[keyCode==13]"
-              hx-target="#messages"
+              hx-target="#messages aside"
               hx-swap="beforeend scroll:bottom"
               hx-indicator="#loading-message"
               hx-on:htmx:before-request="this.disabled=true"
-              hx-on:htmx:after-request="this.disabled=false;setTimeout(() => this.focus(), 20)"
+              hx-on:htmx:after-request="this.disabled=false;setTimeout(() => this.focus(), 50)"
               x-bind:disabled="messageDisabled"
               x-ref="message"
               x-model="message"
-              x-on:keyup.enter="setTimeout(() => {message = '';pristineChat = false}, 10)"
+              @keyup.enter="setTimeout(() => {message = '';pristineChat = false}, 10)"
               class="my-message" autofocus type="text" placeholder="your message">
             <div style="position:fixed;bottom:3em;right:2em;" class="htmx-indicator" id="loading-message">
               <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="64" height="64" viewBox="0 0 24 24">
@@ -67,6 +90,27 @@ export default function main(messages = [], chats = []) {
             </div>
           </div>
         </main>
+        <script>
+        document.addEventListener('htmx:sseMessage', debounce(function(event) {
+          // window.llmMessage.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'})
+          window.messages.scrollTop = window.messages.scrollHeight
+        }, 50, true))
+        function debounce(func, wait = 50, immediate) {
+          var timeout;
+          return function() {
+            var context = this, args = arguments;
+            var later = function() {
+              timeout = null;
+              if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+          };
+        }
+        
+        </script>
       </body>
     </html>
   `;

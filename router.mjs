@@ -5,6 +5,8 @@ import mainView from './views/main.mjs'
 import llmChat from './lib/llm-chat.mjs'
 import {byChatId, listing, saveChat} from './chats.mjs'
 
+let connections = []
+
 export default async function router (req, res, messages) {
   console.log(new Date().toISOString(), req.method, req.url)
   try {
@@ -39,6 +41,8 @@ export default async function router (req, res, messages) {
       messages.length = 0
       messages.push(...initMessages())
 
+      broadcastSSE('')
+
       res.statusCode = 200
       return res.end(messagesView(messages))
     }
@@ -48,12 +52,32 @@ export default async function router (req, res, messages) {
         res.statusCode = 400
         return res.end(messagesView([]))
       }
+      broadcastSSE('')
+      console.log('user:', text)
+      
+      llmChat(messages, text, broadcastSSE, (text) => 
+        console.log('llm:', text)
+      )
 
-      const newMessages = await llmChat(messages, text)
-      messages.push(...newMessages)
       res.statusCode = 200
-      return res.end(messagesView(newMessages))
+      if (messages.length <= 1) {
+        return res.end(messagesView([{
+          content: text,
+          time: new Date().toISOString(),
+          role: 'user'
+        }]))
+      }
+      return res.end(messagesView([messages[messages.length - 1], {
+        content: text,
+        time: new Date().toISOString(),
+        role: 'user'
+      }]))
     }
+
+    if (req.headers.accept && req.headers.accept.includes('text/event-stream')) {
+      return handleSSE(req, res, connections)
+    }
+
     console.log(' -> 404')
     res.statusCode = 404
     return res.end()
@@ -63,3 +87,25 @@ export default async function router (req, res, messages) {
     return res.end()
   }
 }
+function broadcastSSE (data = '') {
+  connections.forEach(res => {
+    res.write('id: ' + new Date().toISOString() + '\n')
+    data.split('\n').forEach(d => {
+      res.write('data: ' + d + '\n');
+    })
+    res.write('\n\n')
+  })
+}
+
+function handleSSE (req, res, connections = []) {
+  connections.push(res)
+  res.on('close', () => {
+    connections.splice(connections.findIndex(c => res === c), 1)
+  })
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive'
+  })
+}
+
