@@ -2,7 +2,7 @@
 
 [accompanying blog post](https://cri.dev/posts/2023-10-17-zengpt-chapgpt-alternative-frontend-opensource-self-hosting/)
 
-Stupid simple chat ui clone, using a bare node.js http, htmx and alpine
+Stupid simple chat ui clone, using a bare node.js http, server-sent events, htmx and alpine
 
 ![zengpt](zengpt.jpeg)
 
