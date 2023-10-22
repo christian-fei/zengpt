@@ -41,6 +41,8 @@ export default async function router (req, res, messages) {
       messages.length = 0
       messages.push(...initMessages())
 
+      broadcastSSE('')
+
       res.statusCode = 200
       return res.end(messagesView(messages))
     }
@@ -50,19 +52,13 @@ export default async function router (req, res, messages) {
         res.statusCode = 400
         return res.end(messagesView([]))
       }
+      broadcastSSE('')
       console.log('user:', text)
       
-      llmChat(messages, text, (data) => {
-        connections.forEach(r => {
-          r.write('id: ' + new Date().toISOString() + '\n')
-          data.split('\n').forEach(d => {
-            r.write('data: ' + d + '\n');
-          })
-          r.write('\n\n')
-        })
-      }, (text) => {
+      llmChat(messages, text, broadcastSSE, (text) => 
         console.log('llm:', text)
-      })
+      )
+
       res.statusCode = 200
       if (messages.length <= 1) {
         return res.end(messagesView([{
@@ -90,6 +86,15 @@ export default async function router (req, res, messages) {
     res.statusCode = 500
     return res.end()
   }
+}
+function broadcastSSE (data = '') {
+  connections.forEach(res => {
+    res.write('id: ' + new Date().toISOString() + '\n')
+    data.split('\n').forEach(d => {
+      res.write('data: ' + d + '\n');
+    })
+    res.write('\n\n')
+  })
 }
 
 function handleSSE (req, res, connections = []) {
