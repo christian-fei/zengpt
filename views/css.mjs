@@ -47,6 +47,7 @@ export default function css() {
   pre {
     background-color: #aaa !important;
     color: black !important;
+    overflow-x: auto !important;
   }
   .user-message,
   .assistant-message,
