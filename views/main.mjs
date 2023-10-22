@@ -30,7 +30,7 @@ export default function main(messages = [], chats = []) {
                 hx-delete="/chat"
                 hx-target="#messages aside"
                 @click="$refs.message.focus();messageDisabled=false;pristineChat=true;">
-                new chat
+                clear
               </a>
             </div>
             <!--
