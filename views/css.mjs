@@ -1,7 +1,7 @@
 export default function css() {
     return `
   html, body {
-    height: 95vh;
+    height: 90vh;
     margin: 0;
     font-family: monospace;
   }
