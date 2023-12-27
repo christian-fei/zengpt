@@ -8,6 +8,7 @@ export default function main(messages = [], chats = []) {
       <head>
         <meta charset="utf-8">
         <title>zengpt</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="//unpkg.com/htmx.org"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
         <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
