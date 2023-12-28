@@ -12,6 +12,7 @@ export default function main(messages = [], chats = []) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="theme-color" content="white">
+        <link rel="manifest" href="manifest.json">
         <script src="//unpkg.com/htmx.org"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
         <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
