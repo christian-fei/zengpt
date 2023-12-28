@@ -4,6 +4,7 @@ export default function css() {
     height: 100vh;
     margin: 0;
     font-family: monospace;
+    font-size: 18px;
   }
   header {
     position:fixed;
@@ -27,7 +28,7 @@ export default function css() {
     flex:1;
     overflow-y:scroll;
     padding-top:8em;
-    padding-bottom:4em;
+    padding-bottom:6em;
     max-width:80em;
     margin: 0 auto;
     padding-right:0.5em;
@@ -42,7 +43,7 @@ export default function css() {
     right: 1em;
     max-width: 40em;
     width: 80%;
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 2rem 1rem;
     border: 1px solid #ccc;
     outline: none;
@@ -59,7 +60,7 @@ export default function css() {
     display: block;
     width: 100%;
     max-width: 80em;
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
     outline: none;
     margin: 0 auto;
