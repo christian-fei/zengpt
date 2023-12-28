@@ -1,6 +1,7 @@
 import messageFromRequest from './lib/message-from-request.mjs'
 import initMessages from './lib/init-messages.mjs'
 import messagesView from './views/messages.mjs'
+import renderMessages from './views/messages.mjs'
 import mainView from './views/main.mjs'
 import llmChat from './lib/llm-chat.mjs'
 import {byChatId, listing, saveChat} from './chats.mjs'
@@ -56,7 +57,10 @@ export default async function router (req, res, messages) {
       broadcastSSE('')
       console.log('user:', text)
       
-      llmChat(messages, text, broadcastSSE, (text) => 
+      llmChat(messages, text, message => broadcastSSE(renderMessages([{
+        content: message,
+        role: 'assistant'
+      }])), text => 
         console.log('llm:', text)
       )
 
