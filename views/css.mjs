@@ -44,7 +44,7 @@ export default function css() {
     max-width: 40em;
     width: 80%;
     font-size: 1rem;
-    padding: 2rem 1rem;
+    padding: 1rem 1rem;
     border: 1px solid #ccc;
     outline: none;
     margin: 0 auto;
