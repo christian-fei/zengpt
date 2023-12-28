@@ -4,6 +4,7 @@ import messagesView from './views/messages.mjs'
 import mainView from './views/main.mjs'
 import llmChat from './lib/llm-chat.mjs'
 import {byChatId, listing, saveChat} from './chats.mjs'
+import fs from 'fs'
 
 let connections = []
 
@@ -78,6 +79,17 @@ export default async function router (req, res, messages) {
       return handleSSE(req, res, connections)
     }
 
+    if (req.url === '/images/icon-192x192.png') {
+      res.setHeader('Content-Type', 'image/png')
+      res.statusCode = 200
+      return fs.createReadStream('/images/icon-192x192.png').pipe(res)
+    }
+    if (req.url === '/images/icon-512x512.png') {
+      res.setHeader('Content-Type', 'image/png')
+      res.statusCode = 200
+      return fs.createReadStream('/images/icon-512x512.png').pipe(res)
+    }
+
     console.log(' -> 404')
     res.statusCode = 404
     return res.end()
@@ -91,7 +103,7 @@ function broadcastSSE (data = '') {
   connections.forEach(res => {
     res.write('id: ' + new Date().toISOString() + '\n')
     data.split('\n').forEach(d => {
-      res.write('data: ' + d + '\n');
+      res.write('data: ' + d + '\n')
     })
     res.write('\n\n')
   })
