@@ -79,6 +79,11 @@ export default async function router (req, res, messages) {
       return handleSSE(req, res, connections)
     }
 
+    if (req.url === '/app.webmanifest') {
+      res.setHeader('Content-Type', 'application/manifest+json')
+      res.statusCode = 200
+      return fs.createReadStream('/app.webmanifest').pipe(res)
+    }
     if (req.url === '/images/icon-192x192.png') {
       res.setHeader('Content-Type', 'image/png')
       res.statusCode = 200
