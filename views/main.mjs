@@ -28,19 +28,35 @@ export default function main(messages = [], chats = []) {
       }">
         <header>
           <div style="display:flex">
-            <div style="flex:1";><h1>zengpt</h1></div>
-            <div x-show="!pristineChat" style="flex:1;";>
+            <div style="flex:1";><h3>zengpt</h3></div>
+            <div x-show="!pristineChat" style="flex:1;">
               <button
-                style="display:block;padding:1rem;font-size:1rem;"
+                style="display:block;margin-top:1rem;padding:1rem;font-size:1rem;"
                 hx-delete="/chat"
                 hx-target="#messages aside"
                 @click="$refs.message.focus();messageDisabled=false;pristineChat=true;">
-                clear
+                new chat
               </button>
             </div>
             <!--
-            <div x-show="!pristineChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-post="/chats" hx-target="#messages" @click="$refs.message.value = '';messageDisabled=false;pristineChat=true">save chat</button></div>
-            <div x-show="viewingPreviousChat" style="flex:1;";><button style="display:block;padding:1rem;font-size:1.5rem;" hx-get="/chat" hx-target="#messages" @click="$refs.message.value = '';messageDisabled=false;">go back</button></div>
+            <div x-show="!pristineChat" style="flex:1;";>
+              <button 
+                style="display:block;margin-top:1rem;padding:1rem;font-size:1rem;"
+                hx-post="/chats" 
+                hx-target="#messages" 
+                @click="$refs.message.value = '';messageDisabled=false;pristineChat=true">
+                save chat
+              </button>
+            </div>
+            <div x-show="viewingPreviousChat" style="flex:1;";>
+              <button 
+                style="display:block;margin-top:1rem;padding:1rem;font-size:1rem;"
+                hx-get="/chat"
+                hx-target="#messages"
+                @click="$refs.message.value = '';messageDisabled=false;">
+                go back
+              </button>
+            </div>
             -->
           </div>
           <!--

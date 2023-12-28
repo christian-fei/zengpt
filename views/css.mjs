@@ -21,7 +21,7 @@ export default function css() {
   main {
     height:90vh;
     _width:80em;
-    max-width:90%;
+    max-width:99%;
     margin:0 auto;
   }
   #messages {
@@ -41,9 +41,9 @@ export default function css() {
     bottom: 1em;
     left: 1em;
     right: 1em;
-    max-width: 40em;
+    max-width: 60em;
     width: 80%;
-    font-size: 1rem;
+    font-size: 1.25rem;
     padding: 1rem 1rem;
     border: 1px solid #ccc;
     outline: none;
