@@ -4,7 +4,7 @@ export default function css() {
     height: 100vh;
     margin: 0;
     font-family: monospace;
-    font-size: 18px;
+    font-size: 20px;
   }
   header {
     position:fixed;
