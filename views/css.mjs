@@ -1,7 +1,7 @@
 export default function css() {
     return `
   html, body {
-    height: 90vh;
+    height: 100vh;
     margin: 0;
     font-family: monospace;
   }
@@ -18,16 +18,16 @@ export default function css() {
     color:black;
   }
   main {
-    height:95vh;
+    hheight:90vh;
     _width:80em;
-    max-width:100%;
+    max-width:90%;
     margin:0 auto;
   }
   #messages {
     flex:1;
     overflow-y:scroll;
     padding-top:8em;
-    padding-bottom:8em;
+    padding-bottom:4em;
     max-width:80em;
     margin: 0 auto;
     padding-right:0.5em;
@@ -36,8 +36,12 @@ export default function css() {
   }  
   .my-message {
     display: block;
-    max-width: 50em;
-    width: 100%;
+    position: fixed;
+    bottom: 1em;
+    left: 1em;
+    right: 1em;
+    max-width: 40em;
+    width: 80%;
     font-size: 2rem;
     padding: 2rem 1rem;
     border: 1px solid #ccc;
