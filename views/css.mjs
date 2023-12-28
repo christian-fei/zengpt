@@ -19,7 +19,7 @@ export default function css() {
     color:black;
   }
   main {
-    hheight:90vh;
+    height:90vh;
     _width:80em;
     max-width:90%;
     margin:0 auto;
