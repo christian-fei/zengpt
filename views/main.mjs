@@ -31,7 +31,7 @@ export default function main(messages = [], chats = []) {
             <div style="flex:1";><h1>zengpt</h1></div>
             <div x-show="!pristineChat" style="flex:1;";>
               <button
-                style="display:block;padding:1rem;font-size:1.5rem;"
+                style="display:block;padding:1rem;font-size:1rem;"
                 hx-delete="/chat"
                 hx-target="#messages aside"
                 @click="$refs.message.focus();messageDisabled=false;pristineChat=true;">
