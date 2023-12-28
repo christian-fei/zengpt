@@ -82,17 +82,17 @@ export default async function router (req, res, messages) {
     if (req.url === '/app.webmanifest') {
       res.setHeader('Content-Type', 'application/manifest+json')
       res.statusCode = 200
-      return fs.createReadStream('/app.webmanifest').pipe(res)
+      return fs.createReadStream('./app.webmanifest').pipe(res)
     }
     if (req.url === '/images/icon-192x192.png') {
       res.setHeader('Content-Type', 'image/png')
       res.statusCode = 200
-      return fs.createReadStream('/images/icon-192x192.png').pipe(res)
+      return fs.createReadStream('./images/icon-192x192.png').pipe(res)
     }
     if (req.url === '/images/icon-512x512.png') {
       res.setHeader('Content-Type', 'image/png')
       res.statusCode = 200
-      return fs.createReadStream('/images/icon-512x512.png').pipe(res)
+      return fs.createReadStream('./images/icon-512x512.png').pipe(res)
     }
 
     console.log(' -> 404')
