@@ -59,9 +59,9 @@ export default function css() {
   .system-message {
     display: block;
     width: 100%;
-    max-width: 80em;
+    max-width: 60em;
     font-size: 1rem;
-    padding: 0.5rem 1rem 0.5rem 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     outline: none;
     margin: 0 auto;
     transition: all 0.5s ease;
