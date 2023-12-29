@@ -16,19 +16,21 @@ export default function css() {
     border-radius:2em;
     border:1px solid lightgrey;
     background:white;
+    /* bg super light grey */
+    background: #f8f8f8;
     color:black;
   }
   main {
-    height:90vh;
+    _height:90vh;
     _width:80em;
-    max-width:99%;
+    _max-width:99%;
     margin:0 auto;
   }
   #messages {
     flex:1;
     overflow-y:scroll;
-    padding-top:8em;
-    padding-bottom:6em;
+    padding-top:6em;
+    padding-bottom:4em;
     max-width:60em;
     margin: 0 auto;
     padding-right:0.5em;
@@ -69,8 +71,8 @@ export default function css() {
     
     font-family: monospace;
     _white-space: pre-wrap;
-    _word-wrap: break-word;
-    _overflow-wrap: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     _word-break: break-all;
     hyphens: auto;
   }
