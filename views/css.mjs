@@ -9,9 +9,9 @@ export default function css() {
   header {
     position:fixed;
     z-index:100;
-    top:0.5em;
-    left:0.5em;
-    right:0.5em;
+    top:0.75em;
+    left:0.75em;
+    right:0.75em;
     padding:1em;
     border-radius:2em;
     border:1px solid lightgrey;
@@ -33,18 +33,17 @@ export default function css() {
     padding-bottom:4em;
     max-width:60em;
     margin: 0 auto;
-    padding-right:0.5em;
-    padding-left:0.5em;
+    padding-right:0.75em;
+    padding-left:0.75em;
     overflow-x: hidden !important;
   }  
   .my-message {
     display: block;
     position: fixed;
-    bottom: 0.5em;
-    left: 0.5em;
-    right: 0.5em;
+    bottom: 0.75em;
+    left: 0.75em;
+    right: 0.75em;
     max-width: 60em;
-    width: 80%;
     font-size: 1.125rem;
     padding: 1rem 1rem;
     border: 1px solid #ccc;
