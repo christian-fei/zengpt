@@ -43,7 +43,7 @@ export default function css() {
     right: 1em;
     max-width: 60em;
     width: 80%;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     padding: 1rem 1rem;
     border: 1px solid #ccc;
     outline: none;
