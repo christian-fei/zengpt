@@ -4,7 +4,7 @@ export default function css() {
     height: 100vh;
     margin: 0;
     font-family: monospace;
-    font-size: 18px;
+    font-size: 20px;
   }
   header {
     position:fixed;
@@ -16,7 +16,6 @@ export default function css() {
     border-radius:2em;
     border:1px solid lightgrey;
     background:white;
-    /* bg super light grey */
     background: #f8f8f8;
     color:black;
   }
