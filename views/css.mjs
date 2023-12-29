@@ -29,7 +29,7 @@ export default function css() {
     overflow-y:scroll;
     padding-top:8em;
     padding-bottom:6em;
-    max-width:80em;
+    max-width:60em;
     margin: 0 auto;
     padding-right:0.5em;
     padding-left:0.5em;
