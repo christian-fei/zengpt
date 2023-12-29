@@ -71,7 +71,6 @@ export default function css() {
     _white-space: pre-wrap;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    _word-break: break-all;
     hyphens: auto;
   }
   @keyframes fadein {
