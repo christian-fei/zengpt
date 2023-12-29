@@ -9,9 +9,9 @@ export default function css() {
   header {
     position:fixed;
     z-index:100;
-    top:1em;
-    left:1em;
-    right:1em;
+    top:0.5em;
+    left:0.5em;
+    right:0.5em;
     padding:1em;
     border-radius:2em;
     border:1px solid lightgrey;
@@ -38,9 +38,9 @@ export default function css() {
   .my-message {
     display: block;
     position: fixed;
-    bottom: 1em;
-    left: 1em;
-    right: 1em;
+    bottom: 0.5em;
+    left: 0.5em;
+    right: 0.5em;
     max-width: 60em;
     width: 80%;
     font-size: 1.125rem;
